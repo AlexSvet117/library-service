@@ -1,11 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    "Yo!"
-</body>
-</html>
+<script>
+    const ui = SwaggerUIBundle({
+        spec: {
+            openapi: "3.0.0",
+            info: {
+                title: "Books API",
+                description: "API to manage and retrieve information about books in a library.",
+                version: "1.0.0"
+            },
+            paths: {
+                "/api/books": {
+                    get: {
+                        summary: "Get all books",
+                        description: "Returns a list of all books in the library.",
+                        responses: {
+                            "200": {
+                                description: "A list of all books in the library",
+                                content: {
+                                    "application/json": {
+                                        schema: {
+                                            type: "array",
+                                            items: {
+                                                type: "object",
+                                                properties: {
+                                                    book_id: { type: "string" },
+                                                    title: { type: "string" },
+                                                    author: { type: "string" },
+                                                    publication_year: { type: "integer" },
+                                                    genre: { type: "string" },
+                                                    read_status: { type: "string" },
+                                                    rating: { type: "number", format: "float" },
+                                                    notes: { type: "string" }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "500": {
+                                description: "Internal server error"
+                            }
+                        }
+                    },
+                    post: {
+                        summary: "Add a new book",
+                        description: "Adds a new book to the library. Requires a payload with specific fields.",
+                        requestBody: {
+                            required: true,
+                            content: {
+                                "application/json": {
+                                    schema: {
+                                        type: "object",
+                                        properties: {
+                                            book_id: { type: "string" },
+                                            title: { type: "string" },
+                                            author: { type: "string" },
+                                            publication_year: { type: "integer" },
+                                            genre: { type: "string" },
+                                            read_status: { type: "string" },
+                                            rating: { type: "number", format: "float" },
+                                            notes: { type: "string" }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            "201": {
+                                description: "The book has been successfully added",
+                                content: {
+                                    "application/json": {
+                                        schema: {
+                                            type: "object",
+                                            properties: {
+                                                status: { type: "string" },
+                                                books: {
+                                                    type: "array",
+                                                    items: {
+                                                        type: "object",
+                                                        properties: {
+                                                            book_id: { type: "string" },
+                                                            title: { type: "string" },
+                                                            author: { type: "string" },
+                                                            publication_year: { type: "integer" },
+                                                            genre: { type: "string" },
+                                                            read_status: { type: "string" },
+                                                            rating: { type: "number", format: "float" },
+                                                            notes: { type: "string" }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "400": { description: "Invalid input or missing required fields (book_id, title)" },
+                            "500": { description: "Internal server error" }
+                        }
+                    }
+                }
+            }
+        },
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout"
+    });
+</script>

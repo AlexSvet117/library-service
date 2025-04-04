@@ -21,7 +21,6 @@ def home():
     return render_template("index.html")
 
 
-# returns all the books from the list of books
 @app.route("/api/books", methods = ["GET"])
 def get_all_books():
     """
@@ -30,8 +29,7 @@ def get_all_books():
     return jsonify(books)
 
 
-# returns selected book
-@app.route("/api/books/<string:book_id>")
+@app.route("/api/books/<string:book_id>", methods = ["GET"])
 def get_selected_book(book_id):
     """
     Function returns selected book based on provided book_id
@@ -75,7 +73,27 @@ def add_book():
             return jsonify({"error": f"book_id {new_book.get("book_id")} is already present"}), 400
     
     books.append(new_book)
-    return jsonify(new_book), 201
+    return jsonify({"status" : f"Successfully added new book with book_id {new_book.get("book_id")}", "books": books}), 201
+
+
+@app.route("/api/books/<string:book_id>", methods = ["PUT"])
+def update_book(book_id):
+    """
+    Function updates a book if book exists in the list
+    Functions uses book id to determine which book to update
+    """
+    book_to_update = None
+    for book in books:
+        if book_id == book.get("book_id"):
+            book_to_update = book
+
+    if book_to_update:
+        new_book = request.json
+        book_to_update.update(new_book)
+        return jsonify({"status" : "Book successfully updated", "books" : books}), 201
+    return jsonify({"error": "Book not found"}), 400
+
+
 
 
 

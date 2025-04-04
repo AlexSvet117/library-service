@@ -113,7 +113,7 @@ def delete_book(book_id):
 @app.route("/api/books/stats", methods = ["GET"])
 def books_stats():
     """
-    Functions returns statistics of existing list of books
+    Functions returns statistics of existing list of books:
     - Total number of books in the library
     - Number of books by read status
     - Average rating across all books

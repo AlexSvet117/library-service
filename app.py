@@ -94,6 +94,20 @@ def update_book(book_id):
     return jsonify({"error": "Book not found"}), 400
 
 
+@app.route("/api/books/<string:book_id>", methods = ["DELETE"])
+def delete_book(book_id):
+    """
+    Function for deletion of book if it is present in the list of books
+    """
+    book_delete = None
+    for book in books:
+        if book_id == book.get("book_id"):
+            book_delete = book
+
+    if book_delete:
+        books.remove(book_delete)
+        return jsonify({"status" : "Successfully deleted selected book", "books" : books}), 204
+    return jsonify({"error": "The book not in the list"}), 400
 
 
 

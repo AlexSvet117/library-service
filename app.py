@@ -13,7 +13,7 @@ books = [
     {"book_id": "004", "title":"Giraffe can't Dance", "author": "Some Crazy Dude", "publication_year": 2000, 
      "genre":"Kids books", "read_status":"read", "rating": 5.0, "notes":"Great book! Awesome!"},
     {"book_id": "005", "title":"Unicorns don't wear Tutu", "author": "Some Dude", "publication_year": 2007, 
-     "genre":"Kids books", "read_status":"to-read", "rating": 0.0, "notes":"To be read, but should be also very interesting and funny"}
+     "genre":"Kids books", "read_status":"to-read", "rating": 4.6, "notes":"To be read, but should be also very interesting and funny"}
 ]
 
 @app.route("/")
@@ -108,6 +108,62 @@ def delete_book(book_id):
         books.remove(book_delete)
         return jsonify({"status" : "Successfully deleted selected book", "books" : books}), 204
     return jsonify({"error": "The book not in the list"}), 400
+
+
+@app.route("/api/books/stats", methods = ["GET"])
+def books_stats():
+    """
+    Functions returns statistics of existing list of books
+    - Total number of books in the library
+    - Number of books by read status
+    - Average rating across all books
+    - Books count by genre
+    """
+    total_books = 0
+    read = 0
+    reading = 0
+    to_read = 0
+    total_raiting = 0.0
+    av_raiting = 0.0
+    genre_counts = {}
+
+    for book in books:
+        total_books = total_books + 1
+        total_raiting = total_raiting + book.get("rating")
+
+        genre = book.get("genre", "Unknown")
+        if genre in genre_counts:
+            genre_counts[genre] += 1
+        else:
+            genre_counts[genre] = 1
+
+        if book.get("read_status") == "read":
+            read = read + 1
+        if book.get("read_status") == "to-read":
+            to_read = to_read + 1
+        if book.get("read_status") == "reading":
+            reading = reading + 1
+        
+    if total_books > 0:
+        av_raiting = total_raiting / total_books
+    else:
+        av_raiting = 0
+
+    return jsonify({
+        "status": "The stats are calculated", 
+        "total_books": total_books,
+        "read": read,
+        "reading": reading,
+        "to-read": to_read,
+        "average_rating": av_raiting,
+        "genre_counts": genre_counts
+    }), 200
+
+
+
+    
+
+    
 
 
 
